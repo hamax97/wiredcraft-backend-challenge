@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Folder with any stuff.
+.ignore
+
+# VSCode.
+.vscode
