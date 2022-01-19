@@ -1,0 +1,19 @@
+{
+  "name": "wiredcraft-backend-challenge",
+  "version": "1.0.0",
+  "description": "Solution to the problem proposed by Wiredcraft as a backend challenge.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hamax97/wiredcraft-backend-challenge.git"
+  },
+  "author": "Hamilton Tobon Mosquera",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
