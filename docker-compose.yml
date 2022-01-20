@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo:5.0.5
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+  app:
+    build:
+      context: .
+      args:
+        username: ${MY_USER}
+        uid: ${MY_UID}
+        gid: ${MY_GID}
+        home: ${MY_HOME}
+        src: ${SRC}
+    command: npm run start:watch
+    ports:
+      - 3000:3000
+    environment:
+      MONGO_URL: mongodb
+      PORT: 3000
+    volumes:
+      - .:${SRC}
+      - nodemodules:${SRC}/node_modules
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+volumes:
+  nodemodules: {}
+  mongodb: {}
