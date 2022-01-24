@@ -106,5 +106,7 @@ dist
 # Folder with any stuff.
 .ignore
 
-# VSCode.
+# Editor.
 .vscode
+.eslintignore
+.eslintrc.json

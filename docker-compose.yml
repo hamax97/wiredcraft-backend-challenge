@@ -9,12 +9,6 @@ services:
   app:
     build:
       context: .
-      args:
-        username: ${MY_USER}
-        uid: ${MY_UID}
-        gid: ${MY_GID}
-        home: ${MY_HOME}
-        src: ${SRC}
     command: npm run start:watch
     ports:
       - 3000:3000
@@ -22,8 +16,8 @@ services:
       MONGO_URL: mongodb
       PORT: 3000
     volumes:
-      - .:${SRC}
-      - nodemodules:${SRC}/node_modules
+      - .:/home/node/src
+      - nodemodules:/home/node/src/node_modules
     links:
       - mongodb
     depends_on:

@@ -4,10 +4,16 @@ Link [here](https://github.com/Wiredcraft/test-backend).
 
 # Setup Development Environment
 
-Run:
+Build needed containers:
 
 ```bash
-docker compose --env-file .dockercompose.env up --build -d
+docker compose up --build -d
+```
+
+Start:
+
+```bash
+docker compose start
 ```
 
 Access `localhost:3000`.
@@ -15,7 +21,17 @@ Access `localhost:3000`.
 Access logs:
 
 ```bash
-docker logs --follow <container-name>
+docker logs --follow wiredcraft-backend-challenge-app-1
+```
+
+Run tests:
+
+```bash
+docker exec -ti wiredcraft-backend-challenge-app-1 npm run test
+
+# or ...
+docker exec -ti wiredcraft-backend-challenge-app-1 bash # get permanent terminal.
+npm run test
 ```
 
 # Build Image
