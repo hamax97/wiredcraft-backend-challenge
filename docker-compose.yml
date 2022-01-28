@@ -9,25 +9,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - mongodb:/data/db
-  app:
-    build:
-      context: .
-    command: npm run start:watch
-    ports:
-      - 3000:3000
-    environment:
-      MONGODB_HOST: mongodb
-      MONGODB_USERNAME: root
-      MONGODB_PASSWORD: password
-      PORT: 3000
-    volumes:
-      - .:/home/node/src
-      - nodemodules:/home/node/src/node_modules
-    links:
-      - mongodb
-    depends_on:
-      - mongodb
 
 volumes:
-  nodemodules: {}
   mongodb: {}

@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha \"./lib/**/*.test.js\" --exit",
-    "testd": "docker exec -ti wiredcraft-backend-challenge-app-1 npm run test",
-    "start": "node lib/index.js",
-    "start:watch": "npx nodemon lib/index.js"
+    "start": "node lib/server.js",
+    "start:watch": "npx nodemon lib/server.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +21,7 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
+    "jest": "^27.4.7",
     "mocha": "^9.1.4",
     "rewire": "^6.0.0",
     "sinon": "^12.0.1",
