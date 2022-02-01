@@ -1,3 +1,5 @@
+"use strict";
+
 exports.handleError = (err, res) => {
   if (err instanceof Error) {
     res.status(400).json({

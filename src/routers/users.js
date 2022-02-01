@@ -2,7 +2,7 @@
 
 const express = require("express");
 
-const usersRepository = require("./usersRepository");
+const usersRepository = require("../repositories/users");
 const utils = require("../shared/utils");
 
 const router = express.Router();

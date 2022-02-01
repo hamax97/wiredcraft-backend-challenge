@@ -10,5 +10,5 @@ exports.create = async (user) => {
   }
 
   user.createdAt = new Date();
-  return await wiredcraftDB.create(collection, user);
+  return wiredcraftDB.create(collection, user);
 };

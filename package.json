@@ -4,9 +4,11 @@
   "description": "Solution to the problem proposed by Wiredcraft as a backend challenge.",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha \"./lib/**/*.test.js\" --exit",
-    "start": "node lib/server.js",
-    "start:watch": "npx nodemon lib/server.js"
+    "test": "npm run test:unit && npm run test:api",
+    "test:unit": "node_modules/mocha/bin/mocha \"./tests/**/*.test.js\"",
+    "test:api": "newman-run postman.json -e dev-environment.json",
+    "start": "node src/index.js",
+    "start:watch": "npx nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +17,7 @@
   "author": "Hamilton Tobon Mosquera",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^15.0.0",
     "express": "^4.17.2",
     "mongodb": "^4.3.1"
   },

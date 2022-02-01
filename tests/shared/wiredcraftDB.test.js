@@ -11,7 +11,7 @@ chai.use(sinonChai);
 const rewire = require("rewire");
 
 const sandbox = sinon.createSandbox();
-let wiredcraftDB = rewire("./wiredcraftDB");
+let wiredcraftDB = rewire("../../src/shared/wiredcraftDB");
 
 describe("wiredcraftDB", () => {
   let initStub, collectionName, collectionStub, insertStub;
@@ -31,7 +31,7 @@ describe("wiredcraftDB", () => {
   });
 
   afterEach(() => {
-    wiredcraftDB = rewire("./wiredcraftDB");
+    wiredcraftDB = rewire("../../src/shared/wiredcraftDB");
     sandbox.restore();
   });
 

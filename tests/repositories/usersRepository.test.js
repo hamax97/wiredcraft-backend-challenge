@@ -9,8 +9,8 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const rewire = require("rewire");
 
-let usersRepository = rewire("./usersRepository");
-const wiredcraftDB = require("../shared/wiredcraftDB");
+let usersRepository = rewire("../../src/repositories/usersRepository");
+const wiredcraftDB = require("../../src/shared/wiredcraftDB");
 
 describe("usersRepository", () => {
   let user;
@@ -24,7 +24,7 @@ describe("usersRepository", () => {
   });
 
   afterEach(() => {
-    usersRepository = rewire("./usersRepository");
+    usersRepository = rewire("../../src/repositories/usersRepository");
   });
 
   context("create", () => {
