@@ -1,6 +1,6 @@
 "use strict";
 
-const mongodb = require("mongodb");
+const { Collection, ObjectId } = require("mongodb");
 const chai = require("chai");
 const expect = chai.expect;
 const chaiAsPromised = require("chai-as-promised");
@@ -14,20 +14,26 @@ const sandbox = sinon.createSandbox();
 let wiredcraftDB = rewire("../../src/shared/wiredcraftDB");
 
 describe("wiredcraftDB", () => {
-  let initStub, collectionName, collectionStub, insertStub;
+  let fakeCollectionName, fakeDocId, getCollectionStub, insertStub, findStub;
 
   beforeEach(() => {
+    fakeCollectionName = "fake_collection";
+    fakeDocId = "f".repeat(12);
+
     insertStub = sandbox
-      .stub(mongodb.Collection.prototype, "insertOne")
-      .resolves({insertedId: "fake_inserted_id"});
+      .stub(Collection.prototype, "insertOne")
+      .resolves({ insertedId: fakeDocId });
 
-    collectionStub = sandbox
-      .stub(mongodb.Db.prototype, "collection")
-      .returns({ insertOne: insertStub });
-    collectionName = "fake_collection";
+    findStub = sandbox
+      .stub(Collection.prototype, "findOne")
+      .withArgs({ _id: ObjectId(fakeDocId) })
+      .resolves({ _id: fakeDocId });
 
-    initStub = sandbox.stub().resolves({ collection: collectionStub });
-    wiredcraftDB.__set__("init", initStub);
+    getCollectionStub = sandbox
+      .stub()
+      .resolves({ insertOne: insertStub, findOne: findStub });
+
+    wiredcraftDB.__set__("getCollection", getCollectionStub);
   });
 
   afterEach(() => {
@@ -52,21 +58,49 @@ describe("wiredcraftDB", () => {
     });
 
     it("should initialize database connection", async () => {
-      await wiredcraftDB.create(collectionName, {});
-      expect(initStub).to.have.been.calledOnce;
+      await wiredcraftDB.create(fakeCollectionName, {});
+      expect(getCollectionStub).to.have.been.calledOnce;
+      expect(getCollectionStub).to.have.been.calledWith(fakeCollectionName);
     });
 
     it("should insert document", async () => {
       const doc = {
         some: "doc",
       };
-      const insertedId = await wiredcraftDB.create(collectionName, doc);
+      const insertedId = await wiredcraftDB.create(fakeCollectionName, doc);
 
-      expect(collectionStub).to.have.been.calledOnce;
-      expect(collectionStub).to.have.been.calledWith(collectionName);
       expect(insertStub).to.have.been.calledOnce;
       expect(insertStub).to.have.been.calledWith(doc);
-      expect(insertedId).to.equal("fake_inserted_id");
+      expect(insertedId).to.equal(fakeDocId);
+    });
+  });
+
+  context("get", () => {
+    it("should fail if wrong input", async () => {
+      const errorMessage = "Must specify collection and docId";
+      await expect(wiredcraftDB.get()).to.eventually.be.rejectedWith(
+        errorMessage
+      );
+
+      await expect(
+        wiredcraftDB.get(null, fakeDocId)
+      ).to.eventually.be.rejectedWith(errorMessage);
+
+      await expect(
+        wiredcraftDB.get(fakeCollectionName)
+      ).to.eventually.be.rejectedWith(errorMessage);
+    });
+
+    it("should initialize database connection", async () => {
+      await wiredcraftDB.get(fakeCollectionName, fakeDocId);
+      expect(getCollectionStub).to.have.been.calledOnce;
+      expect(getCollectionStub).to.have.been.calledWith(fakeCollectionName);
+    });
+
+    it("should get document", async () => {
+      const doc = await wiredcraftDB.get(fakeCollectionName, fakeDocId);
+
+      expect(doc).to.have.property("_id").to.equal(fakeDocId);
     });
   });
 });

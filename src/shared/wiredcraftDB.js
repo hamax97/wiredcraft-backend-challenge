@@ -1,6 +1,6 @@
 "use strict";
 
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const host = process.env.MONGODB_HOST;
 const port = process.env.MONGODB_PORT;
@@ -23,28 +23,35 @@ async function getClient() {
   return client;
 }
 
-async function getDB() {
+async function getCollection(collectionName) {
   if (!db) {
     try {
       client = await getClient();
       db = client.db(dbname);
-      return db;
     } catch (err) {
       console.error(`Error connecting to database: ${err}`);
       throw err;
     }
   }
 
-  return db;
+  return db.collection(collectionName);
 }
 
-exports.create = async (collection, doc) => {
-  if (!collection || !doc) {
+exports.create = async (collectionName, doc) => {
+  if (!collectionName || !doc) {
     throw new Error("Must specify collection and doc");
   }
 
-  const db = await getDB();
-  const result = await db.collection(collection).insertOne(doc);
+  const collection = await getCollection(collectionName);
+  const result = await collection.insertOne(doc);
   return result.insertedId;
-}
+};
 
+exports.get = async (collectionName, docId) => {
+  if (!collectionName || !docId) {
+    throw new Error("Must specify collection and docId");
+  }
+
+  const collection = await getCollection(collectionName);
+  return collection.findOne({_id: ObjectId(docId)});
+};

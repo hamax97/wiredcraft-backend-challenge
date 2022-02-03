@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
     "test:unit": "node_modules/mocha/bin/mocha \"./tests/**/*.test.js\"",
-    "test:api": "newman-run postman.json -e dev-environment.json",
+    "test:api": "npx newman run postman.json -e dev_environment.json",
     "start": "node src/index.js",
     "start:watch": "npx nodemon src/index.js"
   },
