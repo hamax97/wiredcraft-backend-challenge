@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
-    "jest": "^27.4.7"
+    "jest": "^27.4.7",
+    "rewire": "^6.0.0"
   }
 }
