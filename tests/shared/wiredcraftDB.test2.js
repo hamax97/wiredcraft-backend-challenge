@@ -14,11 +14,21 @@ const sandbox = sinon.createSandbox();
 let wiredcraftDB = rewire("../../src/shared/wiredcraftDB");
 
 describe("wiredcraftDB", () => {
-  let fakeCollectionName, fakeDocId, getCollectionStub, insertStub, findStub;
+  let fakeCollectionName,
+    fakeDocId,
+    fakeDoc,
+    getCollectionStub,
+    insertStub,
+    findStub,
+    updateStub;
 
   beforeEach(() => {
     fakeCollectionName = "fake_collection";
     fakeDocId = "f".repeat(12);
+    fakeDoc = {
+      name: "Some Fake Name",
+      address: "With Some Fake Address, NY",
+    };
 
     insertStub = sandbox
       .stub(Collection.prototype, "insertOne")
@@ -29,9 +39,15 @@ describe("wiredcraftDB", () => {
       .withArgs({ _id: ObjectId(fakeDocId) })
       .resolves({ _id: fakeDocId });
 
-    getCollectionStub = sandbox
-      .stub()
-      .resolves({ insertOne: insertStub, findOne: findStub });
+    updateStub = sandbox.stub(Collection.prototype, "updateOne").resolves({
+      modifiedCount: 1,
+    });
+
+    getCollectionStub = sandbox.stub().resolves({
+      insertOne: insertStub,
+      findOne: findStub,
+      updateOne: updateStub,
+    });
 
     wiredcraftDB.__set__("getCollection", getCollectionStub);
   });
@@ -43,18 +59,19 @@ describe("wiredcraftDB", () => {
 
   context("create", () => {
     it("should fail if wrong input", async () => {
-      const errorMessage = "Must specify collection and doc";
+      // const error = new Error("Must specify collection and doc");
+      const error = "Must specify collection and doc";
       await expect(wiredcraftDB.create()).to.eventually.be.rejectedWith(
-        errorMessage
+        "a"
       );
 
       await expect(
         wiredcraftDB.create(null, { some: "doc" })
-      ).to.eventually.be.rejectedWith(errorMessage);
+      ).to.eventually.be.rejectedWith(error);
 
       await expect(
         wiredcraftDB.create("someCollection", null)
-      ).to.eventually.be.rejectedWith(errorMessage);
+      ).to.eventually.be.rejectedWith(error);
     });
 
     it("should initialize database connection", async () => {
@@ -101,6 +118,46 @@ describe("wiredcraftDB", () => {
       const doc = await wiredcraftDB.get(fakeCollectionName, fakeDocId);
 
       expect(doc).to.have.property("_id").to.equal(fakeDocId);
+    });
+  });
+
+  context("update", () => {
+    it("should fail if wrong input", async () => {
+      const errorMessage = "Must specify collection, docId and doc";
+      await expect(wiredcraftDB.update()).to.eventually.be.rejectedWith(
+        errorMessage
+      );
+
+      await expect(
+        wiredcraftDB.update(fakeCollectionName)
+      ).to.eventually.be.rejectedWith(errorMessage);
+
+      await expect(
+        wiredcraftDB.update(fakeCollectionName, fakeDocId)
+      ).to.eventually.be.rejectedWith(errorMessage);
+    });
+
+    it("should initialize database connection", async () => {
+      await wiredcraftDB.update(fakeCollectionName, fakeDocId, fakeDoc);
+      expect(getCollectionStub).to.have.been.calledOnce;
+      expect(getCollectionStub).to.have.been.calledWith(fakeCollectionName);
+    });
+
+    it("should update document", async () => {
+      const modifiedCount = await wiredcraftDB.update(
+        fakeCollectionName,
+        fakeDocId,
+        fakeDoc
+      );
+
+      expect(updateStub).to.have.been.calledOnce;
+      expect(updateStub).to.have.been.calledWith(
+        { _id: ObjectId(fakeDocId) },
+        {
+          $set: fakeDoc,
+        }
+      );
+      expect(modifiedCount).to.equal(1);
     });
   });
 });

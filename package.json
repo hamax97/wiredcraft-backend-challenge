@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
-    "test:unit": "node_modules/mocha/bin/mocha \"./tests/**/*.test.js\"",
+    "test:unit": "node_modules/jest/bin/jest.js --testMatch \"**/tests/**/*.test.js\"",
     "test:api": "npx newman run postman.json -e dev_environment.json",
     "start": "node src/index.js",
     "start:watch": "npx nodemon src/index.js"
@@ -22,13 +22,7 @@
     "mongodb": "^4.3.1"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
-    "jest": "^27.4.7",
-    "mocha": "^9.1.4",
-    "rewire": "^6.0.0",
-    "sinon": "^12.0.1",
-    "sinon-chai": "^3.7.0",
-    "supertest": "^6.2.2"
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.7"
   }
 }

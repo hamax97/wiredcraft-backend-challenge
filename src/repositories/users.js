@@ -20,3 +20,15 @@ exports.get = async (userId) => {
 
   return wiredcraftDB.get(collection, userId);
 };
+
+exports.update = async (userId, newUser) => {
+  if (!userId || !newUser) {
+    throw new Error("Invalid input. Must provide userId and newUser");
+  }
+
+  if (Object.keys(newUser).length === 0) {
+    throw new Error("newUser empty");
+  }
+
+  return wiredcraftDB.update(collection, userId, newUser);
+};

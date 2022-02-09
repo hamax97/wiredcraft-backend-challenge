@@ -30,14 +30,27 @@ router.get("/:userId", async (req, res) => {
     }
 
   } catch (err) {
-    console.log(err);
     utils.handleError(err, res);
   }
 });
 
-router.patch("/:id", (req, res) => {
-  console.log("Implement update operation!");
-  res.send("Implement update operation!");
+router.patch("/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const newUser = req.body;
+
+    const updatedCount = await usersRepository.update(userId, newUser);
+
+    if (updatedCount > 0) {
+      res.status(200);
+    } else {
+      res.status(500);
+    }
+
+    res.json({updatedCount: updatedCount});
+  } catch (err) {
+    utils.handleError(err, res);
+  }
 });
 
 router.delete("/:id", (req, res) => {

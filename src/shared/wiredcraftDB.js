@@ -53,5 +53,19 @@ exports.get = async (collectionName, docId) => {
   }
 
   const collection = await getCollection(collectionName);
-  return collection.findOne({_id: ObjectId(docId)});
+  return collection.findOne({ _id: ObjectId(docId) });
+};
+
+exports.update = async (collectionName, docId, doc) => {
+  if (!collectionName || !docId || !doc) {
+    throw new Error("Must specify collection, docId and doc");
+  }
+
+  const collection = await getCollection(collectionName);
+  const updateResult = await collection.updateOne(
+    { _id: ObjectId(docId) },
+    { $set: doc }
+  );
+
+  return updateResult.modifiedCount;
 };

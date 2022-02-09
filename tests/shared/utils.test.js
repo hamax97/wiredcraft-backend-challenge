@@ -1,52 +1,47 @@
 "use strict";
 
-const chai = require("chai");
-const expect = chai.expect;
-const sinon = require("sinon");
-const sinonChai = require("sinon-chai");
-chai.use(sinonChai);
-
 const utils = require("../../src/shared/utils");
-const sandbox = sinon.createSandbox();
 
-describe("utils", () => {
-  context("handleError", () => {
-    let statusStub, jsonStub, res;
-
-    beforeEach(() => {
-      jsonStub = sandbox.stub();
-
-      statusStub = sandbox.stub().returns({
-        json: jsonStub,
-      });
-
-      res = {
-        status: statusStub,
-      };
+describe("handleError", () => {
+  let fakeRes, statusMock, jsonMock;
+  beforeEach(() => {
+    statusMock = jest.fn();
+    jsonMock = jest.fn();
+    statusMock.mockReturnValue({
+      json: jsonMock,
     });
 
-    afterEach(() => {
-      sandbox.restore();
-    });
+    fakeRes = {
+      status: statusMock,
+    };
+  });
 
-    it("should call res.status with 400", () => {
-      utils.handleError(new Error("fake_error"), res);
-      expect(statusStub).to.have.been.calledWith(400);
-      expect(statusStub).to.have.been.calledOnce;
+  afterEach(() => {
+    statusMock.mockReset();
+    jsonMock.mockReset();
+  });
 
-      utils.handleError("fake_error", res);
-      expect(statusStub).to.have.been.calledWith(400);
-      expect(statusStub).to.have.been.calledTwice;
-    });
+  test("calls res.status with 400", () => {
+    utils.handleError(new Error("fake_error"), fakeRes);
 
-    it("should check for instanceof Error and respond accordingly", () => {
-      utils.handleError(new Error("fake_error"), res);
-      expect(jsonStub).to.have.been.calledWith({ error: "fake_error" });
-      expect(jsonStub).to.have.been.calledOnce;
+    expect(statusMock).toHaveBeenCalledWith(400);
+    expect(statusMock).toHaveBeenCalledTimes(1);
+    statusMock.mockClear();
 
-      utils.handleError("fake_error", res);
-      expect(jsonStub).to.have.been.calledWith("fake_error");
-      expect(jsonStub).to.have.been.calledTwice;
-    });
+    utils.handleError("fake_error", fakeRes);
+
+    expect(statusMock).toHaveBeenCalledWith(400);
+    expect(statusMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("checks for type of error and responds accordingly", () => {
+    utils.handleError(new Error("fake_error"), fakeRes);
+    expect(jsonMock).toHaveBeenCalledWith({ error: "fake_error" });
+    expect(jsonMock).toHaveBeenCalledTimes(1);
+    jsonMock.mockClear();
+
+    utils.handleError("fake_error", fakeRes);
+    expect(jsonMock).toHaveBeenCalledWith("fake_error");
+    expect(jsonMock).toHaveBeenCalledTimes(1);
   });
 });
