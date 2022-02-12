@@ -1,6 +1,5 @@
 "use strict";
 
-const { ObjectId } = require("mongodb");
 const rewire = require("rewire");
 
 const wiredcraftDBModulePath = "../../src/shared/wiredcraftDB";
@@ -127,7 +126,7 @@ describe("update", () => {
 
     const operatorArg = updateMock.mock.calls[0][1];
     expect(operatorArg).toHaveProperty("$set");
-    expect(operatorArg.$set).toEqual(fakeDoc);
+    expect(operatorArg.$set).toStrictEqual(fakeDoc);
 
     expect(modifiedCount).toEqual(1);
   });

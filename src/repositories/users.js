@@ -2,7 +2,7 @@
 
 const wiredcraftDB = require("../shared/wiredcraftDB");
 
-const collection = "users";
+const collectionName = "users";
 
 exports.create = async (user) => {
   if (!user || !user.name || !user.dob || !user.address) {
@@ -10,7 +10,7 @@ exports.create = async (user) => {
   }
 
   user.createdAt = new Date();
-  return wiredcraftDB.create(collection, user);
+  return wiredcraftDB.create(collectionName, user);
 };
 
 exports.get = async (userId) => {
@@ -18,17 +18,17 @@ exports.get = async (userId) => {
     throw new Error("Invalid userId");
   }
 
-  return wiredcraftDB.get(collection, userId);
+  return wiredcraftDB.get(collectionName, userId);
 };
 
 exports.update = async (userId, newUser) => {
-  if (!userId || !newUser) {
-    throw new Error("Invalid input. Must provide userId and newUser");
+  if (!userId || typeof userId !== "string") {
+    throw new Error("Invalid userId");
   }
 
-  if (Object.keys(newUser).length === 0) {
-    throw new Error("newUser empty");
+  if (!newUser || Object.keys(newUser).length === 0) {
+    throw new Error("Invalid newUser");
   }
 
-  return wiredcraftDB.update(collection, userId, newUser);
+  return wiredcraftDB.update(collectionName, userId, newUser);
 };
