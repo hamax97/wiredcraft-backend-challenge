@@ -2,8 +2,8 @@
 
 require('dotenv').config({path: `${__dirname}/../.env`});
 
-const express = require("express");
-const user = require("./routers/users");
+import express = require("express");
+import user = require("./routers/users");
 
 const port = process.env.PORT;
 
