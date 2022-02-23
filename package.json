@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Solution to the problem proposed by Wiredcraft as a backend challenge.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
     "test:unit": "node_modules/jest/bin/jest.js --testMatch \"**/tests/**/*.test.js\"",
@@ -27,6 +28,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
     "@types/mongodb": "^4.0.7",
+    "@types/node": "^17.0.19",
     "jest": "^27.4.7",
     "rewire": "^6.0.0"
   }

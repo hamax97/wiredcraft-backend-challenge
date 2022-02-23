@@ -2,7 +2,7 @@
 
 const rewire = require("rewire");
 
-const wiredcraftDBModulePath = "../../src/shared/wiredcraftDB";
+const wiredcraftDBModulePath = "../../built/shared/wiredcraftDB";
 let wiredcraftDB = rewire(wiredcraftDBModulePath);
 
 let fakeCollectionName, fakeDoc, fakeDocId;

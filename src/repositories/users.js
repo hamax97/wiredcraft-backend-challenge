@@ -1,27 +1,25 @@
-"use strict";
-
-const wiredcraftDB = require("../shared/wiredcraftDB");
+import * as WiredcraftDB from "../shared/wiredcraftDB.js";
 
 const collectionName = "users";
 
-exports.create = async (user) => {
+export async function create(user) {
   if (!user || !user.name || !user.dob || !user.address) {
     throw new Error("Invalid user");
   }
 
   user.createdAt = new Date();
-  return wiredcraftDB.create(collectionName, user);
+  return WiredcraftDB.create(collectionName, user);
 };
 
-exports.get = async (userId) => {
+export async function get(userId) {
   if (!userId || typeof userId !== "string") {
     throw new Error("Invalid userId");
   }
 
-  return wiredcraftDB.get(collectionName, userId);
+  return WiredcraftDB.get(collectionName, userId);
 };
 
-exports.update = async (userId, newUser) => {
+export async function update(userId, newUser) {
   if (!userId || typeof userId !== "string") {
     throw new Error("Invalid userId");
   }
@@ -30,5 +28,5 @@ exports.update = async (userId, newUser) => {
     throw new Error("Invalid newUser");
   }
 
-  return wiredcraftDB.update(collectionName, userId, newUser);
+  return WiredcraftDB.update(collectionName, userId, newUser);
 };

@@ -1,6 +1,4 @@
-"use strict";
-
-const { MongoClient, ObjectId } = require("mongodb");
+import { MongoClient, Db, ObjectId } from "mongodb";
 
 const host = process.env.MONGODB_HOST;
 const port = process.env.MONGODB_PORT;
@@ -10,8 +8,8 @@ const dbname = process.env.MONGODB_DBNAME;
 
 const uri = `mongodb://${username}:${password}@${host}:${port}`;
 
-let client;
-let db;
+let client: MongoClient;
+let db: Db;
 
 async function getClient() {
   if (client) {
@@ -23,7 +21,7 @@ async function getClient() {
   return client;
 }
 
-async function getCollection(collectionName) {
+async function getCollection(collectionName: string) {
   if (!db) {
     try {
       client = await getClient();
@@ -37,7 +35,7 @@ async function getCollection(collectionName) {
   return db.collection(collectionName);
 }
 
-exports.create = async (collectionName, doc) => {
+export async function create(collectionName: string, doc: object) {
   if (!collectionName || !doc) {
     throw new Error("Must specify collection and doc");
   }
@@ -47,23 +45,23 @@ exports.create = async (collectionName, doc) => {
   return result.insertedId;
 };
 
-exports.get = async (collectionName, docId) => {
+export async function get(collectionName: string, docId: string) {
   if (!collectionName || !docId) {
     throw new Error("Must specify collection and docId");
   }
 
   const collection = await getCollection(collectionName);
-  return collection.findOne({ _id: ObjectId(docId) });
+  return collection.findOne({ _id: new ObjectId(docId) });
 };
 
-exports.update = async (collectionName, docId, doc) => {
+export async function update(collectionName: string, docId: string, doc: object) {
   if (!collectionName || !docId || !doc) {
     throw new Error("Must specify collection, docId and doc");
   }
 
   const collection = await getCollection(collectionName);
   const updateResult = await collection.updateOne(
-    { _id: ObjectId(docId) },
+    { _id: new ObjectId(docId) },
     { $set: doc }
   );
 

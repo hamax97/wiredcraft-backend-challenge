@@ -1,15 +1,20 @@
-"use strict";
+import path from "path";
+import { fileURLToPath } from "url";
 
-require('dotenv').config({path: `${__dirname}/../.env`});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-import express = require("express");
-import user = require("./routers/users");
+import dotenv from "dotenv";
+dotenv.config({ path: `${__dirname}/../.env` });
+
+import express from "express";
+import usersRouter from "./routers/users.js";
 
 const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
 
-app.use("/users", user);
+app.use("/users", usersRouter);
 
 app.listen(port);
